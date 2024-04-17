@@ -2,17 +2,19 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const dataRoute = require('./route/bpmroutes');
+const dataRoute = require('./routes/bpmroute');
 
 const app = express();
 const PORT = 3000;
 
 // Connect to MongoDB
- mongoose.createConnection('mongodb+srv://mouadchiali:mouadchiali@clustertestprojet.n7r4egf.mongodb.net/').on('open',()=>{
+mongoose.createConnection('mongodb+srv://mouadchiali:mouadchiali@clustertestprojet.n7r4egf.mongodb.net/doctors').on('open',()=>{
     console.log("connected")
 }).on('error',()=>{
     console.log("not connected")
 })
+
+
 // Middleware
 app.use(bodyParser.json());
 
