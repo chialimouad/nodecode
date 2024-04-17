@@ -8,12 +8,11 @@ const app = express();
 const PORT = 3000;
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://mouadchiali:mouadchiali@clustertestprojet.n7r4egf.mongodb.net/doctors',).then(() => {
-  console.log('MongoDB connected');
-}).catch((err) => {
-  console.error('MongoDB connection error:', err);
-});
-
+ mongoose.createConnection('mongodb+srv://mouadchiali:mouadchiali@clustertestprojet.n7r4egf.mongodb.net/').on('open',()=>{
+    console.log("connected")
+}).on('error',()=>{
+    console.log("not connected")
+})
 // Middleware
 app.use(bodyParser.json());
 
