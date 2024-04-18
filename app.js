@@ -1,26 +1,33 @@
-// server.js
 const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const dataRoute = require('./routes/bpmroute');
+const http = require('http');
+const socketIo = require('socket.io');
 
 const app = express();
-const PORT = 3000;
+const server = http.createServer(app);
+const io = socketIo(server);
 
-// Connect to MongoDB
-mongoose.createConnection('mongodb+srv://mouadchiali:mouadchiali@clustertestprojet.n7r4egf.mongodb.net/doctors').on('open',()=>{
-    console.log("connected")
-}).on('error',()=>{
-    console.log("not connected")
-})
+const port = 3000;
 
+app.use(express.static('public'));
 
-// Middleware
-app.use(bodyParser.json());
+io.on('connection', (socket) => {
+  console.log('Flutter app connected');
 
-// Routes
-app.use(dataRoute);
+  socket.on('disconnect', () => {
+    console.log('Flutter app disconnected');
+  });
+});
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.post('/pulsedata', (req, res) => {
+  const pulseData = req.body;
+  console.log('Received pulse data:', pulseData);
+
+  // Forward pulse data to Flutter app
+  io.emit('pulseData', pulseData);
+
+  res.send('Data received successfully');
+});
+
+server.listen(port, () => {
+  console.log(`Node.js server listening at http://localhost:${port}`);
 });
